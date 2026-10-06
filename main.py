@@ -1,7 +1,9 @@
 import os
 from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 from dotenv import load_dotenv
-from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 load_dotenv()
 
@@ -12,11 +14,22 @@ llm = HuggingFaceEndpoint(
 )
 model = ChatHuggingFace(llm = llm)
 
-result = model.invoke("""
-    Q: There were 9 computer in server. 4 more server are installed each day from sunday to tuesday. How many computers are now in server room?
-    A: There are 3 days from sunday to tuesday. It means 3*4=12 computers were added. there were 9 computer in beginning. so now 
-        there is 9+12 = 21 computers. So, final answer is 21 computers.
-    Q: Olivia has $23. She bought five bagels for $3 each. How much money does she have left?
-""")
+data = PyPDFLoader("document/ai.pdf")
+docs = data.load()
+
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size = 500,
+    chunk_overlap = 50
+)
+chunks = splitter.split_documents(docs)
+
+template = ChatPromptTemplate.from_messages([
+    ("system", "You are an AI assistant that summarize text"),
+    ("human", "{data}")
+])
+
+prompt = template.format_messages(data=docs[0].page_content)
+
+result = model.invoke(prompt)
 
 print(result.content)
