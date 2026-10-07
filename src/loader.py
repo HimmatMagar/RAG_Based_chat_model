@@ -13,8 +13,10 @@ def load_document(path):
     docs = data.load()
     return docs
 
+
 def clean_text(text):
     return text.encode("utf-8", errors="ignore").decode("utf-8")
+
 
 def split_text(docs, chunk_size, chunk_overlap):
     for doc in docs:
@@ -26,6 +28,7 @@ def split_text(docs, chunk_size, chunk_overlap):
     )
     chunks = splitter.split_documents(docs)
     return chunks
+
 
 
 def BuildDB(chunks):
