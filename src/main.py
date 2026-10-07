@@ -43,11 +43,3 @@ def ask_question(question: str):
             for doc in document
         ]
     }
-
-while True:
-    query = input("User: ")
-    if query == "exit":
-        break
-
-    response = ask_question(query)
-    print(response.answer)
