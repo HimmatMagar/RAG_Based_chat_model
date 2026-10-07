@@ -1,7 +1,7 @@
 import os
 from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
 from dotenv import load_dotenv
-from retriver import retrive_document
+from .retriver import retrive_document
 from langchain_core.prompts import ChatPromptTemplate
 
 load_dotenv()
